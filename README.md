@@ -14,7 +14,7 @@
   <b>Pilot an aerodynamic electric roadster across an infinite procedural sunset expressway. Weave between multi-class traffic, engage dual vertical thrusters to jump highway blockades, wager gold coins in 60-second online multiplayer derbies, and test your hypersonic reflex limits past 5,000 meters.</b>
 </p>
 
-[🎮 Play Live Game](https://ais-dev-zk7lyjsnekml5tuhebzfkx-631325621069.asia-southeast1.run.app/) • [🏆 Global Leaderboards](#-database--backend-supabase) • [🚀 Deploy to Vercel](#-deploy-to-vercel) • [📖 Database Setup](#-supabase-database-schema)
+[🎮 Play Live Game](https://roadster-racing.vercel.app/) • [🏆 Global Leaderboards](#-database--backend-supabase) • [🚀 Deploy to Vercel](#-deploy-to-vercel) • [📖 Database Setup](#-supabase-database-schema)
 
 ---
 

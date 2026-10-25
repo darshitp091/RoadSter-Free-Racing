@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Google Search Console & Web Crawler Directives
-Sitemap: /sitemap.xml
+Sitemap: https://roadster-racing.vercel.app/sitemap.xml
