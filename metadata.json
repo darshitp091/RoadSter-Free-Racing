@@ -1,0 +1,6 @@
+{
+  "name": "Sky Roadster Infinity",
+  "description": "Drive an electric roadster across an infinite sunset highway, fly over traffic roadblocks, wager gold coins in 60s online multiplayer sprints, and test hypersonic reflexes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

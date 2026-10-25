@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Google Search Console & Web Crawler Directives
+Sitemap: /sitemap.xml
