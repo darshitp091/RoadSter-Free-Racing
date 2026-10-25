@@ -4,8 +4,9 @@
  */
 import React, { useState, useEffect } from 'react';
 import type { ScoreEntry, GameMode, MultiplayerStats, LevelConfig } from '../types';
-import { RotateCcw, Trophy, Award, Zap, Sparkles, ShieldCheck, Home, Swords, CheckCircle2 } from 'lucide-react';
+import { RotateCcw, Trophy, Award, Zap, Sparkles, ShieldCheck, Home, Swords, CheckCircle2, Disc } from 'lucide-react';
 import { supabaseService } from '../services/supabase';
+import { walletService } from '../services/wallet';
 
 interface GameOverModalProps {
   score: number;
@@ -201,11 +202,22 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
             </span>
           </div>
 
-          <div className="bg-black/40 border border-white/10 p-2.5 rounded-lg flex flex-col">
-            <span className="text-[10px] text-white/50 font-bold">GOLD COINS</span>
-            <span className="text-lg font-bold tabular-nums text-[#FFD700] mt-0.5">
-              {orbs}
-            </span>
+          <div className="bg-black/50 border border-[#ffd700]/30 p-2.5 rounded-lg flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] text-white/50 font-bold uppercase flex items-center gap-1">
+                <Disc className="w-3 h-3 text-[#ffd700]" />
+                RUN COINS
+              </span>
+              <span className="text-sm font-black tabular-nums text-[#FFD700]">
+                +{orbs}
+              </span>
+            </div>
+            <div className="flex items-center justify-between mt-1 pt-1 border-t border-white/10">
+              <span className="text-[9px] text-white/40 font-bold uppercase">TOTAL BANK</span>
+              <span className="text-xs font-black tabular-nums text-white">
+                {walletService.getCoins().toLocaleString()} 🪙
+              </span>
+            </div>
           </div>
         </div>
 

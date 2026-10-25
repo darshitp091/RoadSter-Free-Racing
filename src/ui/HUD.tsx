@@ -190,11 +190,18 @@ export const HUD: React.FC<HUDProps> = ({ stats, isMuted, onToggleMute, onPause 
             )}
           </div>
 
-          {/* Gold Medallions Count */}
-          <div className="flex items-center gap-1.5 bg-black/60 px-3 py-1 rounded-lg border border-[#ffd700]/40 text-xs text-[#ffd700] font-bold shadow-[0_0_12px_rgba(255,215,0,0.3)]">
-            <Disc className="w-3.5 h-3.5 text-[#ffd700]" />
-            <span className="tabular-nums">{stats.orbsCollected}</span>
-            <span className="text-[10px] text-white/60">SESSION</span>
+          {/* Live Coin Collection & Wallet Telemetry */}
+          <div className="flex items-center gap-2 bg-black/70 px-3 py-1.5 rounded-lg border border-[#ffd700]/50 text-xs shadow-[0_0_15px_rgba(255,215,0,0.25)]">
+            <div className="flex items-center gap-1 text-[#ffd700] font-bold">
+              <Disc className="w-3.5 h-3.5 text-[#ffd700] animate-spin" />
+              <span className="tabular-nums">+{stats.orbsCollected}</span>
+              <span className="text-[9px] text-white/50 uppercase font-semibold">RUN</span>
+            </div>
+            <span className="text-white/20 text-xs font-bold">|</span>
+            <div className="flex items-center gap-1 text-[#fff5eb] font-semibold text-[11px]">
+              <span className="text-white/50 text-[9px] uppercase font-bold">BANK:</span>
+              <span className="text-[#ffd700] font-bold tabular-nums">{stats.walletCoins.toLocaleString()}</span>
+            </div>
           </div>
         </div>
       </div>

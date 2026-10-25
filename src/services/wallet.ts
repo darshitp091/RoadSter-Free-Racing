@@ -8,6 +8,19 @@ import { supabaseService } from './supabase';
 const WALLET_KEY = 'sky_roadster_wallet_coins';
 const LEVELS_PROGRESS_KEY = 'sky_roadster_levels_progress';
 
+let syncTimer: ReturnType<typeof setTimeout> | null = null;
+
+function syncWalletToCloud(coins: number, immediate: boolean = false) {
+  if (syncTimer) clearTimeout(syncTimer);
+  if (immediate) {
+    supabaseService.saveWallet(coins).catch(() => {});
+  } else {
+    syncTimer = setTimeout(() => {
+      supabaseService.saveWallet(coins).catch(() => {});
+    }, 1200);
+  }
+}
+
 export const walletService = {
   getCoins(): number {
     try {
@@ -28,7 +41,7 @@ export const walletService = {
     const updated = current + Math.max(0, amount);
     try {
       localStorage.setItem(WALLET_KEY, updated.toString());
-      supabaseService.saveWallet(updated).catch(() => {});
+      syncWalletToCloud(updated, false);
     } catch {
       // Ignore localStorage quotas
     }
@@ -43,7 +56,7 @@ export const walletService = {
     const updated = current - amount;
     try {
       localStorage.setItem(WALLET_KEY, updated.toString());
-      supabaseService.saveWallet(updated).catch(() => {});
+      syncWalletToCloud(updated, true);
     } catch {
       // Ignore
     }
