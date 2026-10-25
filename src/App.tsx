@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import type { GameStatus, GameStats, LevelConfig } from './types';
 import { GameEngine } from './game/GameEngine';
 import { HUD } from './ui/HUD';
@@ -139,6 +140,7 @@ export default function App() {
 
   return (
     <div className="w-screen h-screen overflow-hidden bg-[#141226] relative select-none font-sans">
+      <Analytics />
       {/* 3D WebGL Canvas isolated mount */}
       <div
         ref={canvasMountRef}
