@@ -16,6 +16,7 @@ import { ReflexTestModal } from './ui/ReflexTestModal';
 import { AdSenseModal } from './ui/AdSenseModal';
 import { soundEffects } from './audio/SoundEffects';
 import { walletService } from './services/wallet';
+import { Analytics } from '@vercel/analytics/react';
 
 export default function App() {
   const canvasMountRef = useRef<HTMLDivElement>(null);
@@ -245,6 +246,9 @@ export default function App() {
       {gameStatus === 'LEADERBOARD' && (
         <LeaderboardModal onBack={handleReturnToTitle} />
       )}
+
+      {/* Vercel Analytics Tracker */}
+      <Analytics />
     </div>
   );
 }
