@@ -71,6 +71,16 @@ export default function App() {
   }, [loadPersonalBest]);
 
   useEffect(() => {
+    // Real-time synchronization of wallet currency across all events
+    const unsubscribe = walletService.subscribe((coins) => {
+      setStats((prev) => (prev.walletCoins !== coins ? { ...prev, walletCoins: coins } : prev));
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
     if (!canvasMountRef.current) return;
 
     // Instantiate game engine

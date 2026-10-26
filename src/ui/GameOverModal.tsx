@@ -44,6 +44,12 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
   const [qualifiesForTop10, setQualifiesForTop10] = useState(false);
   const [initials, setInitials] = useState('ACE');
   const [saved, setSaved] = useState(false);
+  const [totalBank, setTotalBank] = useState<number>(() => walletService.getCoins());
+
+  useEffect(() => {
+    const unsubscribe = walletService.subscribe(setTotalBank);
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (gameMode !== 'ENDLESS') return;
@@ -215,7 +221,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
             <div className="flex items-center justify-between mt-1 pt-1 border-t border-white/10">
               <span className="text-[9px] text-white/40 font-bold uppercase">TOTAL BANK</span>
               <span className="text-xs font-black tabular-nums text-white">
-                {walletService.getCoins().toLocaleString()} 🪙
+                {totalBank.toLocaleString()} 🪙
               </span>
             </div>
           </div>

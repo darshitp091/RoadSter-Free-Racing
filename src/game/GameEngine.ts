@@ -1237,7 +1237,8 @@ export class GameEngine {
         orb.active = false;
         orb.mesh.visible = false;
         this.orbsCollected++;
-        walletService.addCoins(1); // Real permanent Gold Coin wallet credit!
+        // Real-time permanent Gold Coin wallet credit emitted via walletService
+        walletService.addCoins(1);
         this.flightFuel = Math.min(FLIGHT_FUEL_MAX, this.flightFuel + 1.1);
         this.score += 250 * this.combo;
         this.triggerEventMessage('24K GOLD MEDALLION! +250');
@@ -1248,6 +1249,9 @@ export class GameEngine {
           orb.mesh.position.y,
           orb.mesh.position.z
         );
+
+        // Emit real-time stats update immediately so walletCoins state in App.tsx reflects instantly
+        this.dispatchStats();
       }
     }
   }
@@ -1356,60 +1360,66 @@ export class GameEngine {
       this.roadblockWarning
     ) {
       this.statsThrottleTimer = 0;
-
-      let mpStats: MultiplayerStats | undefined = undefined;
-      if (this.gameMode === 'MULTIPLAYER') {
-        mpStats = {
-          timeLeft: Math.max(0, this.multiplayerTimer),
-          wagerCoins: MULTIPLAYER_WAGER_COINS,
-          rivalName: this.rivalName,
-          rivalScore: this.rivalScore,
-          rivalDistance: Math.floor(this.rivalDistance),
-          rivalSpeedKmh: Math.floor(this.rivalSpeed * 3.6),
-          rivalLane: this.rivalLane,
-          matchFinished: this.multiplayerFinished,
-          isWinner: this.multiplayerWinner,
-          coinsAwarded: this.multiplayerWinner ? MULTIPLAYER_REWARD_COINS : 0,
-        };
-      }
-
-      this.onStatsUpdate?.({
-        score: this.score,
-        distance: Math.floor(this.distanceTraveled),
-        speedKmh: Math.floor(this.forwardSpeed * 3.6),
-        flightFuel: this.flightFuel / FLIGHT_FUEL_MAX,
-        boostFuel: this.boostFuel / BOOST_FUEL_MAX,
-        combo: this.combo,
-        comboTimer: this.comboTimer,
-        nearMissCount: this.nearMissCount,
-        orbsCollected: this.orbsCollected,
-        timeSurvived: this.timeSurvived,
-        isNewBest: this.isNewBest,
-        isBoosting: this.isBoosting,
-        isFlying: this.isFlying,
-        isRolling: this.isRolling,
-        isFlopping: this.isFlopping,
-        nearMissFlash: this.nearMissFlashTimer > 0,
-        roadblockWarning: this.roadblockWarning,
-        lastEventMessage: this.lastEventMessage,
-        skyPhase: this.skySystem.getPhaseName(this.distanceTraveled),
-        gameMode: this.gameMode,
-        currentLevel: this.currentLevelConfig,
-        levelCompleted: this.levelCompleted,
-        warpSurgeActive: this.warpSurgeActive,
-        multiplayer: mpStats,
-        walletCoins: walletService.getCoins(),
-        canRevive: this.reviveCount === 0,
-        reviveCount: this.reviveCount,
-        averageReactionMs:
-          this.reactionTimes.length > 0
-            ? Math.round(
-                this.reactionTimes.reduce((acc, v) => acc + v, 0) /
-                  this.reactionTimes.length
-              )
-            : 195,
-      });
+      this.dispatchStats();
     }
+  }
+
+  /**
+   * Emits real-time telemetry and wallet currency updates to listeners
+   */
+  public dispatchStats() {
+    let mpStats: MultiplayerStats | undefined = undefined;
+    if (this.gameMode === 'MULTIPLAYER') {
+      mpStats = {
+        timeLeft: Math.max(0, this.multiplayerTimer),
+        wagerCoins: MULTIPLAYER_WAGER_COINS,
+        rivalName: this.rivalName,
+        rivalScore: this.rivalScore,
+        rivalDistance: Math.floor(this.rivalDistance),
+        rivalSpeedKmh: Math.floor(this.rivalSpeed * 3.6),
+        rivalLane: this.rivalLane,
+        matchFinished: this.multiplayerFinished,
+        isWinner: this.multiplayerWinner,
+        coinsAwarded: this.multiplayerWinner ? MULTIPLAYER_REWARD_COINS : 0,
+      };
+    }
+
+    this.onStatsUpdate?.({
+      score: this.score,
+      distance: Math.floor(this.distanceTraveled),
+      speedKmh: Math.floor(this.forwardSpeed * 3.6),
+      flightFuel: this.flightFuel / FLIGHT_FUEL_MAX,
+      boostFuel: this.boostFuel / BOOST_FUEL_MAX,
+      combo: this.combo,
+      comboTimer: this.comboTimer,
+      nearMissCount: this.nearMissCount,
+      orbsCollected: this.orbsCollected,
+      timeSurvived: this.timeSurvived,
+      isNewBest: this.isNewBest,
+      isBoosting: this.isBoosting,
+      isFlying: this.isFlying,
+      isRolling: this.isRolling,
+      isFlopping: this.isFlopping,
+      nearMissFlash: this.nearMissFlashTimer > 0,
+      roadblockWarning: this.roadblockWarning,
+      lastEventMessage: this.lastEventMessage,
+      skyPhase: this.skySystem.getPhaseName(this.distanceTraveled),
+      gameMode: this.gameMode,
+      currentLevel: this.currentLevelConfig,
+      levelCompleted: this.levelCompleted,
+      warpSurgeActive: this.warpSurgeActive,
+      multiplayer: mpStats,
+      walletCoins: walletService.getCoins(),
+      canRevive: this.reviveCount === 0,
+      reviveCount: this.reviveCount,
+      averageReactionMs:
+        this.reactionTimes.length > 0
+          ? Math.round(
+              this.reactionTimes.reduce((acc, v) => acc + v, 0) /
+                this.reactionTimes.length
+            )
+          : 195,
+    });
   }
 
   private updateCamera(delta: number) {

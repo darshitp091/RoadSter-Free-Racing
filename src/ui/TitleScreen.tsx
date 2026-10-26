@@ -27,7 +27,12 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
   onToggleMute,
   personalBest,
 }) => {
-  const coins = walletService.getCoins();
+  const [coins, setCoins] = React.useState<number>(() => walletService.getCoins());
+
+  React.useEffect(() => {
+    const unsubscribe = walletService.subscribe(setCoins);
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className="absolute inset-0 z-30 flex flex-col justify-between items-center p-4 md:p-8 select-none bg-gradient-to-t from-[#141226]/95 via-black/40 to-[#f55d2c]/20 pointer-events-auto font-mono">

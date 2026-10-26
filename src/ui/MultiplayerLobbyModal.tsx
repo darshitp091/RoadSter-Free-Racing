@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, Disc, Trophy, Swords, ShieldAlert, ArrowLeft, Play, Globe } from 'lucide-react';
 import { MULTIPLAYER_MATCH_DURATION, MULTIPLAYER_WAGER_COINS, MULTIPLAYER_REWARD_COINS } from '../game/constants';
 import { walletService } from '../services/wallet';
@@ -26,10 +26,15 @@ export const MultiplayerLobbyModal: React.FC<MultiplayerLobbyModalProps> = ({
   onStartMatch,
   onBack,
 }) => {
-  const [walletCoins, setWalletCoins] = useState<number>(walletService.getCoins());
+  const [walletCoins, setWalletCoins] = useState<number>(() => walletService.getCoins());
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [searchStatus, setSearchStatus] = useState<string>('Ready to Match');
   const [rivalName, setRivalName] = useState<string>('');
+
+  useEffect(() => {
+    const unsubscribe = walletService.subscribe(setWalletCoins);
+    return () => unsubscribe();
+  }, []);
 
   const handleEnterMatch = () => {
     if (walletCoins < MULTIPLAYER_WAGER_COINS) return;

@@ -21,7 +21,36 @@ function syncWalletToCloud(coins: number, immediate: boolean = false) {
   }
 }
 
+type WalletListener = (coins: number) => void;
+const listeners = new Set<WalletListener>();
+
+function notifyListeners(coins: number) {
+  listeners.forEach((listener) => {
+    try {
+      listener(coins);
+    } catch {
+      // Ignore listener error
+    }
+  });
+}
+
 export const walletService = {
+  subscribe(listener: WalletListener): () => void {
+    listeners.add(listener);
+    try {
+      listener(this.getCoins());
+    } catch {}
+    return () => {
+      listeners.delete(listener);
+    };
+  },
+
+  emitCurrent(): number {
+    const current = this.getCoins();
+    notifyListeners(current);
+    return current;
+  },
+
   getCoins(): number {
     try {
       const stored = localStorage.getItem(WALLET_KEY);
@@ -45,6 +74,7 @@ export const walletService = {
     } catch {
       // Ignore localStorage quotas
     }
+    notifyListeners(updated);
     return updated;
   },
 
@@ -60,6 +90,7 @@ export const walletService = {
     } catch {
       // Ignore
     }
+    notifyListeners(updated);
     return { success: true, balance: updated };
   },
 
